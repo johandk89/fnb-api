@@ -4,7 +4,8 @@ import { Api as FnbApi } from '../src'
 (async () => {
 	const api = new FnbApi({
 		username: process.env.FNB_USER as string,
-		password: process.env.FNB_PASS as string
+		password: process.env.FNB_PASS as string,
+		puppeteerOptions:{ headless: false }
 	})
 
 	const accounts = await api.accounts.get()

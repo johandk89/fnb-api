@@ -124,7 +124,12 @@ export class Scraper {
 		await this._page.waitForFunction(() => !!document.querySelector('#loaderOverlay.overlayContainer.Hhide'))
 		await this._page.waitForFunction(() => document.getElementsByClassName('footerBtn').length > 0 || !!document.getElementById('newsLanding'))
 
-		const hasFooterButton = await this._page.evaluate(() => document.getElementsByClassName('footerBtn').length > 0)
+		const hasUploadDocsButton = await this._page.evaluate(() => $('#footerButtonsContainer > div:nth-child(2) > a').length > 0)
+		if (hasUploadDocsButton) {
+			await this._clickSkipButton()
+		}
+
+		const hasFooterButton = await this._page.evaluate(() => document.getElementsByClassName('footerBtn').length === 1)
 		if (hasFooterButton) {
 			await this._clickFooterButton()
 		}
@@ -137,7 +142,16 @@ export class Scraper {
 
 	private async _clickFooterButton() {
 		const page = this._page as Page
-		await page.click('.footerBtn a')
+		let selector = '#footerButtonsContainer > div > a'
+		await page.waitForSelector(selector);
+		await page.click(selector)
+	}
+
+	private async _clickSkipButton() {
+		const page = this._page as Page
+		let selector = '#footerButtonsContainer > div:nth-child(2) > a'
+		await page.waitForSelector(selector);
+    	await page.click(selector);
 	}
 
 	private _isLoggedIn() {
